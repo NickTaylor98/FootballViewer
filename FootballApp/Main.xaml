@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FootballApp"
-        mc:Ignorable="d" 
+        mc:Ignorable="d"
         Icon="/img/football.png"
         Height="{Binding SystemParameters.PrimaryScreenHeight}" 
         Width="{Binding SystemParameters.PrimaryScreenWidth}">
@@ -18,8 +18,8 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="31*" />
-            <RowDefinition Height="67*" />
-            <RowDefinition Height="158*" />
+            <RowDefinition Height="81*" />
+            <RowDefinition Height="144*" />
             <RowDefinition Height="248*" />
         </Grid.RowDefinitions>
         <Label Content="Сегодня" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="15"/>
@@ -51,9 +51,18 @@
             <Label Name="FirstGoals" Grid.Column="0" FontWeight="Bold"  
                    FontSize="12" 
                    HorizontalContentAlignment="Left"/>
-            <Label Name="Goals" Grid.Column="1" FontWeight="Bold"  
-               FontSize="40" 
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="42*" />
+                </Grid.RowDefinitions>
+                <Label Name="Goals" FontWeight="Bold" Grid.Row="1" 
+               FontSize="38" 
                VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <Label Name="Status" FontWeight="Bold" 
+                       FontSize="12" 
+                       VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>
+            </Grid>
             <Label Name="SecondGoals" Grid.Column="2" FontWeight="Bold"  
                    FontSize="12"
                    HorizontalContentAlignment="Left"/>
@@ -64,23 +73,38 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="27*" />
-                <RowDefinition Height="27*" />
-                <RowDefinition Height="206*"/>
-                <RowDefinition Height="27*"/>
-                <RowDefinition Height="108*"/>
+                <RowDefinition Height="28*" />
+                <RowDefinition Height="28*" />
+                <RowDefinition Height="222*"/>
+                <RowDefinition Height="28*"/>
+                <RowDefinition Height="101*"/>
             </Grid.RowDefinitions>
             <Label Name="Trainer1" FontSize="13"/>
             <StackPanel Grid.Column="0" Grid.Row="2">
                 <ListBox Name="FirstSquad" Visibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <!--<ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="5" BorderThickness="1" BorderBrush="SteelBlue" CornerRadius="4" Width="370">
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>-->
+                </ListBox>
             </StackPanel>
             <Label Name="BestSquad" Grid.Row="1" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Label Name="AnotherPlayers" Grid.Row="3" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Label Name="Trainer2" FontSize="13" Grid.Column="1"/>
             <StackPanel Grid.Column="1" Grid.Row="2">
                 <ListBox Name="SecondSquad" Visibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <!--<ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="1" BorderBrush="SteelBlue" CornerRadius="4">
+                                <TextBlock Text="{Binding Path=SecondSquad.ItemSource}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>-->
+                </ListBox>
             </StackPanel>
             <StackPanel Grid.Row="4">
                 <ListBox Name="AnotherFirstSquad" Visibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"

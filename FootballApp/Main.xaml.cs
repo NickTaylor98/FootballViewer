@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using HtmlAgilityPack;
@@ -138,6 +139,11 @@ namespace FootballApp
         }
         #endregion
         #region Settings of Information
+
+        private void SetStatus(HtmlNode node)
+        {
+            Status.Content = node.SelectSingleNode("/match").GetAttributeValue("statusName", null);
+        }
         private void SetNamesOfCommands(HtmlNode node)
         {
             Squad1.Content = node.
@@ -225,14 +231,16 @@ namespace FootballApp
             if (Matches.SelectedItem == null)
             {
                 Squad1.Content = Squad2.Content = Goals.Content = Trainer1.Content =
-                    Trainer2.Content = FirstGoals.Content = SecondGoals.Content = BestSquad.Content = AnotherPlayers.Content = "";
-                FirstSquad.ItemsSource = SecondSquad.ItemsSource= AnotherFirstSquad.ItemsSource = AnotherSecondSquad.ItemsSource = null;
+                    Trainer2.Content = FirstGoals.Content = SecondGoals.Content = BestSquad.Content =
+                    Status.Content = AnotherPlayers.Content = "";
+                FirstSquad.ItemsSource = SecondSquad.ItemsSource = AnotherFirstSquad.ItemsSource = AnotherSecondSquad.ItemsSource = null;
                 return;
             }
             string url = "https://www.sport-express.ru/services/match/football/" + GetLink() + "/online/se/?xml=1";
             var HtmlDoc = new HtmlDocument();
             HtmlDoc.LoadHtml(GetHtml(url));
             var RootNode = HtmlDoc.DocumentNode;
+            SetStatus(RootNode);
             SetNamesOfCommands(RootNode);
             SetTrainersOfCommands(RootNode);
             SetGoalsOfCommands(RootNode);

@@ -21,10 +21,8 @@ namespace FootballApp
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-   public partial class MainWindow : Window
+    public partial class MainWindow : Window
     {
-        //[DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
-        //public static extern short GetKeyState(int keyCode);
         SqlConnection connection = new SqlConnection(@"Data Source =.;Initial Catalog = FootballDb;Integrated Security = True;");
 
         public MainWindow()
@@ -92,6 +90,6 @@ namespace FootballApp
                 Button_Click(sender, e);
             CheckCapsLock();
         }
-        
+
     }
 }
