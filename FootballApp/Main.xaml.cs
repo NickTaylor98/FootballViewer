@@ -48,8 +48,7 @@ namespace FootballApp
         {
             List<string> rc = new List<string>();
             SetYesterdayNode();
-            var nodes = YesterdayNode.Descendants("div").Where(d => d.Attributes.Contains("class") &&
-                                                                  d.Attributes["class"].Value.Contains("heading")).ToArray();
+            var nodes = YesterdayNode.Descendants("div").Where(d => d.Attributes.Contains("class") && d.Attributes["class"].Value.Contains("heading")).ToArray();
             for (int i = 0; i < nodes.Length; i++) rc.Add(nodes[i].InnerHtml);
             return rc.ToArray();
         }
@@ -62,7 +61,7 @@ namespace FootballApp
             for (int i = 0; i < nodes.Length; i++) rc.Add(nodes[i].InnerHtml);
             return rc.ToArray();
         }
-        //*[@id="translation_part_football"]/div[1]/div[2]/div/a
+
         private void Today_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             List<Match> rc = new List<Match>();
@@ -70,13 +69,17 @@ namespace FootballApp
             SetCentralNode();
             today = true;
             int l = Today.SelectedIndex + 1;
-            HtmlNode HelpNode = CentralNode.SelectSingleNode("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                             "]/div/div/a");
-            var nodesleft = HelpNode.SelectNodes("/div[2]/div");
-            var nodesright = HelpNode.SelectNodes("/div[4]/div");
-            var leftGoals = HelpNode.SelectNodes("/div[3]/div/div[1]");
-            var rightGoals = HelpNode.SelectNodes("/div[3]/div/div[3]");
-            var times = HelpNode.SelectNodes("/div[1]/div/div[1]");
+
+            var nodesleft = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
+                                                    "]/div/div/a/div[2]/div");
+            var nodesright = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
+                                                    "]/div/div/a/div[4]/div");
+            var leftGoals = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
+                                                    "]/div/div/a/div[3]/div/div[1]");
+            var rightGoals = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
+                                                     "]/div/div/a/div[3]/div/div[3]");
+            var times = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
+                                                "]/div/div/a/div[1]/div/div[1]");
 
 
             for (int i = 0; i < nodesleft.Count; i++)
