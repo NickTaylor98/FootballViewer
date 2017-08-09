@@ -48,9 +48,9 @@ namespace FootballApp
         {
             List<string> rc = new List<string>();
             SetYesterdayNode();
-            var headers = YesterdayNode.SelectNodes("//*[@id=\"translation_part_football\"]/div/div[1]");
-            for (int i = 0; i < headers.Count; i++)
-                rc.Add(headers[i].InnerHtml.Trim());
+            var nodes = YesterdayNode.Descendants("div").Where(d => d.Attributes.Contains("class") &&
+                                                                  d.Attributes["class"].Value.Contains("heading")).ToArray();
+            for (int i = 0; i < nodes.Length; i++) rc.Add(nodes[i].InnerHtml);
             return rc.ToArray();
         }
 
@@ -58,11 +58,8 @@ namespace FootballApp
         {
             List<string> rc = new List<string>();
             SetCentralNode();
-            var nodes = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div/div[1]");
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                rc.Add(nodes[i].InnerHtml);
-            }
+            var nodes = CentralNode.Descendants("div").Where(d =>d.Attributes.Contains("class") && d.Attributes["class"].Value.Contains("heading")).ToArray();
+            for (int i = 0; i < nodes.Length; i++) rc.Add(nodes[i].InnerHtml);
             return rc.ToArray();
         }
         //*[@id="translation_part_football"]/div[1]/div[2]/div/a
@@ -73,17 +70,13 @@ namespace FootballApp
             SetCentralNode();
             today = true;
             int l = Today.SelectedIndex + 1;
-
-            var nodesleft = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                    "]/div/div/a/div[2]/div");
-            var nodesright = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                    "]/div/div/a/div[4]/div");
-            var leftGoals = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                    "]/div/div/a/div[3]/div/div[1]");
-            var rightGoals = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                     "]/div/div/a/div[3]/div/div[3]");
-            var times = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                "]/div/div/a/div[1]/div/div[1]");
+            HtmlNode HelpNode = CentralNode.SelectSingleNode("//*[@id=\"translation_part_football\"]/div[" + l +
+                                                             "]/div/div/a");
+            var nodesleft = HelpNode.SelectNodes("/div[2]/div");
+            var nodesright = HelpNode.SelectNodes("/div[4]/div");
+            var leftGoals = HelpNode.SelectNodes("/div[3]/div/div[1]");
+            var rightGoals = HelpNode.SelectNodes("/div[3]/div/div[3]");
+            var times = HelpNode.SelectNodes("/div[1]/div/div[1]");
 
 
             for (int i = 0; i < nodesleft.Count; i++)
@@ -216,6 +209,7 @@ namespace FootballApp
                     help = "";
                     help += Goal.GetAttributeValue("fullMinute", "");
                     help += " " + Goal.ChildNodes["player"].GetAttributeValue("shortname", "");
+                    if (Goal.GetAttributeValue("kind", "").Equals("penalty")) help += "(п)";
                     if (Goal.ChildNodes["info"].GetAttributeValue("scoredFor", "").Equals("home"))
                         firstTeamGoals += help + "\n";
                     else secondTeamGoals += help + "\n";

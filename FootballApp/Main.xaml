@@ -59,7 +59,7 @@
                 <Label Name="Goals" FontWeight="Bold" Grid.Row="1" 
                FontSize="38" 
                VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-                <Label Name="Status" FontWeight="Bold" 
+                <Label Name="Status" FontWeight="Bold" FontFamily="Times New Roman"
                        FontSize="12" 
                        VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>
             </Grid>
