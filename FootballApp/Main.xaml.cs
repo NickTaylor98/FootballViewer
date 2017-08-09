@@ -149,27 +149,42 @@ namespace FootballApp
         private void SetSquadsOfCommands(HtmlNode node)
         {
             BestSquad.Content = "Основной состав";
+            AnotherPlayers.Content = "Запасные";
             List<string> squad1 = new List<string>(),
-                squad2 = new List<string>();
+                squad2 = new List<string>(),
+                anotherSquad1 = new List<string>(),
+                anotherSquad2 = new List<string>();
             var FootballersFromFirstTeam = node.SelectNodes("/match/homecommand/players");
             var FootballersFromSecondTeam = node.SelectNodes("/match/guestcommand/players");
             HtmlNode info = null;
             for (int i = 0; i < FootballersFromFirstTeam.Count; i++)
             {
                 info = FootballersFromFirstTeam[i].ChildNodes["info"];
-                if (info != null && info.GetAttributeValue("orderChange", "").Equals("0"))
-                    squad1.Add(FootballersFromFirstTeam[i].GetAttributeValue("name", null));
+                if (info != null)
+                {
+                    if (info.GetAttributeValue("orderChange", "").Equals("0"))
+                        squad1.Add(FootballersFromFirstTeam[i].GetAttributeValue("name", null));
+                    else anotherSquad1.Add(FootballersFromFirstTeam[i].GetAttributeValue("name", null));
+                }
             }
             for (int i = 0; i < FootballersFromSecondTeam.Count; i++)
             {
                 info = FootballersFromSecondTeam[i].ChildNodes["info"];
-                if (info != null && info.GetAttributeValue("orderChange", "").Equals("0"))
-                    squad2.Add(FootballersFromSecondTeam[i].GetAttributeValue("name", null));
+                if (info != null)
+                {
+                    if (info.GetAttributeValue("orderChange", "").Equals("0"))
+                        squad2.Add(FootballersFromSecondTeam[i].GetAttributeValue("name", null));
+                    else anotherSquad2.Add(FootballersFromSecondTeam[i].GetAttributeValue("name", null));
+                }
             }
             FirstSquad.Visibility = Visibility.Visible;
             FirstSquad.ItemsSource = squad1;
             SecondSquad.Visibility = Visibility.Visible;
             SecondSquad.ItemsSource = squad2;
+            AnotherFirstSquad.Visibility = Visibility.Visible;
+            AnotherFirstSquad.ItemsSource = anotherSquad1;
+            AnotherSecondSquad.Visibility = Visibility.Visible;
+            AnotherSecondSquad.ItemsSource = anotherSquad2;
         }
 
         private void SetTrainersOfCommands(HtmlNode node)
@@ -185,7 +200,7 @@ namespace FootballApp
 
         private void SetGoalsOfCommands(HtmlNode node)
         {
-            string FirstTeamGoals = "", SecondTeamGoals = "", help = "";
+            string firstTeamGoals = "", secondTeamGoals = "", help;
             var AllGoals = node.SelectNodes("/match/events");
             for (int i = 0; i < AllGoals.Count; i++)
             {
@@ -196,12 +211,12 @@ namespace FootballApp
                     help += Goal.GetAttributeValue("fullMinute", "");
                     help += " " + Goal.ChildNodes["player"].GetAttributeValue("shortname", "");
                     if (Goal.ChildNodes["info"].GetAttributeValue("scoredFor", "").Equals("home"))
-                        FirstTeamGoals += help + "\n";
-                    else SecondTeamGoals += help + "\n";
+                        firstTeamGoals += help + "\n";
+                    else secondTeamGoals += help + "\n";
                 }
             }
-            FirstGoals.Content = FirstTeamGoals;
-            SecondGoals.Content = SecondTeamGoals;
+            FirstGoals.Content = firstTeamGoals;
+            SecondGoals.Content = secondTeamGoals;
             Goals.Content = node.SelectSingleNode("/match").GetAttributeValue("score", null);
         }
         #endregion
@@ -210,8 +225,8 @@ namespace FootballApp
             if (Matches.SelectedItem == null)
             {
                 Squad1.Content = Squad2.Content = Goals.Content = Trainer1.Content =
-                    Trainer2.Content = FirstGoals.Content = SecondGoals.Content = BestSquad.Content = "";
-                FirstSquad.ItemsSource = SecondSquad.ItemsSource = null;
+                    Trainer2.Content = FirstGoals.Content = SecondGoals.Content = BestSquad.Content = AnotherPlayers.Content = "";
+                FirstSquad.ItemsSource = SecondSquad.ItemsSource= AnotherFirstSquad.ItemsSource = AnotherSecondSquad.ItemsSource = null;
                 return;
             }
             string url = "https://www.sport-express.ru/services/match/football/" + GetLink() + "/online/se/?xml=1";
