@@ -19,6 +19,7 @@ namespace FootballApp
     {
         private HtmlNode CentralNode;
         private HtmlNode YesterdayNode;
+        private HtmlNode TomorrowNode;
         public Main(string name)
         {
             DataContext = this;
@@ -27,6 +28,7 @@ namespace FootballApp
             this.Title = "Пользователь: " + name;
             Today.ItemsSource = ParseToday();
             Yesterday.ItemsSource = ParseYesterday();
+            Tomorrow.ItemsSource = ParseTomorrow();
         }
 
         private void SetCentralNode()
@@ -36,6 +38,12 @@ namespace FootballApp
             CentralNode = HtmlDoc.DocumentNode;
         }
 
+        private void SetTomorrowNode()
+        {
+            var HtmlDoc = new HtmlDocument();
+            HtmlDoc.LoadHtml(GetHtml("https://www.sport-express.ru/ajax/translations-block/?dateinterval=tomorrow&sportname=football"));
+            TomorrowNode = HtmlDoc.DocumentNode;
+        }
         private void SetYesterdayNode()
         {
             var HtmlDoc = new HtmlDocument();
@@ -45,11 +53,8 @@ namespace FootballApp
 
         private string[] ParseYesterday()
         {
-            List<string> rc = new List<string>();
             SetYesterdayNode();
-            var nodes = GetElementsByClassName(YesterdayNode, "div", "heading");
-            for (int i = 0; i < nodes.Length; i++) rc.Add(nodes[i].InnerHtml);
-            return rc.ToArray();
+            return Parse(YesterdayNode);
         }
 
         private HtmlNode[] GetElementsByClassName(HtmlNode parent, string tagname, string classname)
@@ -57,9 +62,19 @@ namespace FootballApp
 
         private string[] ParseToday()
         {
-            List<string> rc = new List<string>();
             SetCentralNode();
-            var nodes = GetElementsByClassName(CentralNode, "div", "heading");
+            return Parse(CentralNode);
+        }
+
+        private string[] ParseTomorrow()
+        {
+            SetTomorrowNode();
+            return Parse(TomorrowNode);
+        }
+        private string[] Parse(HtmlNode node)
+        {
+            List<string> rc = new List<string>();
+            var nodes = GetElementsByClassName(node, "div", "heading");
             for (int i = 0; i < nodes.Length; i++) rc.Add(nodes[i].InnerHtml);
             return rc.ToArray();
         }
@@ -213,8 +228,7 @@ namespace FootballApp
             var AllNodes = GetElementsByClassName(node, "div", "item is_");
             for (int i = 0; i < AllNodes.Length; i++)
             {
-                if (AllNodes[i].ParentNode.ParentNode.SelectSingleNode("div[1]").InnerHtml
-                        .Equals((string)list.SelectedItem) ||
+                if (AllNodes[i].ParentNode.ParentNode.SelectSingleNode("div[1]").InnerHtml.Equals((string)list.SelectedItem) ||
                     AllNodes[i].ParentNode.SelectSingleNode("div[1]").InnerHtml.Equals((string)list.SelectedItem))
                 {
                     mat.Add(new Match()
@@ -230,6 +244,12 @@ namespace FootballApp
             }
             Matches.Visibility = Visibility.Visible;
             Matches.ItemsSource = mat;
+        }
+
+        private void Tomorrow_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SetTomorrowNode();
+            SetMatches(TomorrowNode, Tomorrow);
         }
     }
 }

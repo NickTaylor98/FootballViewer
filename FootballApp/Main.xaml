@@ -19,22 +19,39 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="31*" />
             <RowDefinition Height="81*" />
-            <RowDefinition Height="144*" />
-            <RowDefinition Height="248*" />
+            <RowDefinition Height="67*" />
+            <RowDefinition Height="325*" />
         </Grid.RowDefinitions>
-        <Label Content="Сегодня" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="15"/>
-        <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
-            <ListBox Name="Today" SelectionMode="Single" SelectionChanged="Today_OnSelectionChanged"/>
-        </StackPanel>
-        <Grid Grid.Column="0" Grid.Row="3">
+        <Grid Grid.RowSpan="4">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="7*"/>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
-            <Label Content="Вчера" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="15"/>
-            <StackPanel Grid.Column="0" Grid.Row="1">
-                <ListBox Name="Yesterday" SelectionMode="Single" SelectionChanged="Yesterday_OnSelectionChanged"/>
-            </StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="31*" />
+                    <RowDefinition Height="137*" />
+                </Grid.RowDefinitions>
+                <Label Content="Сегодня" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                <ListBox Grid.Row="1" Name="Today" SelectionMode="Single" SelectionChanged="Today_OnSelectionChanged"/>
+            </Grid>
+            <Grid Grid.Column="0" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="31*"/>
+                    <RowDefinition Height="137*"/>
+                </Grid.RowDefinitions>
+                <Label Content="Вчера" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                <ListBox Name="Yesterday" Grid.Row="1" SelectionMode="Single" SelectionChanged="Yesterday_OnSelectionChanged"/>
+            </Grid>
+            <Grid Grid.Column="0" Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="31*"/>
+                    <RowDefinition Height="137*"/>
+                </Grid.RowDefinitions>
+                <Label Content="Завтра" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                <ListBox Name="Tomorrow" Grid.Row="1" SelectionMode="Single" SelectionChanged="Tomorrow_OnSelectionChanged"/>
+            </Grid>
         </Grid>
         <Label Grid.Column="1" Grid.Row="0" Content="Обозреватель матчей" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="15"/>
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="3">
