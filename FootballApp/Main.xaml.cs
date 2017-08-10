@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using HtmlAgilityPack;
@@ -130,14 +129,17 @@ namespace FootballApp
             var FootballersFromFirstTeam = node.SelectNodes("/match/homecommand/players");
             var FootballersFromSecondTeam = node.SelectNodes("/match/guestcommand/players");
             HtmlNode info = null;
+            string help = "";
             for (int i = 0; i < FootballersFromFirstTeam.Count; i++)
             {
                 info = FootballersFromFirstTeam[i].ChildNodes["info"];
                 if (info != null)
                 {
+                    help = String.Format("{0, -5}{1}", info.GetAttributeValue("number", null),
+                        FootballersFromFirstTeam[i].GetAttributeValue("name", null));
                     if (info.GetAttributeValue("orderChange", "").Equals("0"))
-                        squad1.Add(FootballersFromFirstTeam[i].GetAttributeValue("name", null));
-                    else anotherSquad1.Add(FootballersFromFirstTeam[i].GetAttributeValue("name", null));
+                        squad1.Add(help);
+                    else anotherSquad1.Add(help);
                 }
             }
             for (int i = 0; i < FootballersFromSecondTeam.Count; i++)
@@ -145,9 +147,11 @@ namespace FootballApp
                 info = FootballersFromSecondTeam[i].ChildNodes["info"];
                 if (info != null)
                 {
+                    help = String.Format("{0, -5}{1}", info.GetAttributeValue("number", null),
+                        FootballersFromSecondTeam[i].GetAttributeValue("name", null));
                     if (info.GetAttributeValue("orderChange", "").Equals("0"))
-                        squad2.Add(FootballersFromSecondTeam[i].GetAttributeValue("name", null));
-                    else anotherSquad2.Add(FootballersFromSecondTeam[i].GetAttributeValue("name", null));
+                        squad2.Add(help);
+                    else anotherSquad2.Add(help);
                 }
             }
             FirstSquad.Visibility = Visibility.Visible;

@@ -74,7 +74,7 @@
                     <RowDefinition Height="42*" />
                 </Grid.RowDefinitions>
                 <Viewbox Grid.Row="1" Name="Viewbox">
-                    <TextBox Name="Goals" Width="{Binding Viewbox.Width}"/>
+                    <TextBox Name="Goals" />
                 </Viewbox>
                 <Label Name="Status" FontWeight="Bold" FontFamily="Times New Roman"
                        FontSize="12" 
@@ -97,21 +97,14 @@
                 <RowDefinition Height="101*"/>
             </Grid.RowDefinitions>
             <Label Name="Trainer1" FontSize="13"/>
-            <StackPanel Grid.Column="0" Grid.Row="2">
+            <Viewbox Grid.Row="2" Grid.Column="0" Name="FirstView">
                 <ListBox Name="FirstSquad" Visibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <!--<ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Border Margin="5" BorderThickness="1" BorderBrush="SteelBlue" CornerRadius="4" Width="370">
-                            </Border>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>-->
-                </ListBox>
-            </StackPanel>
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+            </Viewbox>
             <Label Name="BestSquad" Grid.Row="1" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Label Name="AnotherPlayers" Grid.Row="3" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Label Name="Trainer2" FontSize="13" Grid.Column="1"/>
-            <StackPanel Grid.Column="1" Grid.Row="2">
+            <Viewbox Grid.Column="1" Grid.Row="2" Name="SecondView">
                 <ListBox Name="SecondSquad" Visibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <!--<ListBox.ItemTemplate>
@@ -122,15 +115,15 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>-->
                 </ListBox>
-            </StackPanel>
-            <StackPanel Grid.Row="4">
+            </Viewbox>
+            <Viewbox Grid.Row="4">
                 <ListBox Name="AnotherFirstSquad" Visibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-            </StackPanel>
-            <StackPanel Grid.Row="4" Grid.Column="1">
+            </Viewbox>
+            <Viewbox Grid.Row="4" Grid.Column="1">
                 <ListBox Name="AnotherSecondSquad" Visibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-            </StackPanel>
+            </Viewbox>
         </Grid>
     </Grid>
 
