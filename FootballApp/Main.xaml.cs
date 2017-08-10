@@ -31,24 +31,24 @@ namespace FootballApp
             Tomorrow.ItemsSource = ParseTomorrow();
         }
 
-        private void SetCentralNode()
+        private void SetNode(string day, ref HtmlNode node)
         {
             var HtmlDoc = new HtmlDocument();
-            HtmlDoc.LoadHtml(GetHtml("https://www.sport-express.ru/ajax/translations-block/?dateinterval=today&sportname=football"));
-            CentralNode = HtmlDoc.DocumentNode;
+            HtmlDoc.LoadHtml(GetHtml("https://www.sport-express.ru/ajax/translations-block/?dateinterval=" + day + "&sportname=football"));
+            node = HtmlDoc.DocumentNode;
+        }
+        private void SetCentralNode()
+        {
+            SetNode("today", ref CentralNode);
         }
 
         private void SetTomorrowNode()
         {
-            var HtmlDoc = new HtmlDocument();
-            HtmlDoc.LoadHtml(GetHtml("https://www.sport-express.ru/ajax/translations-block/?dateinterval=tomorrow&sportname=football"));
-            TomorrowNode = HtmlDoc.DocumentNode;
+            SetNode("tomorrow",ref TomorrowNode);
         }
         private void SetYesterdayNode()
         {
-            var HtmlDoc = new HtmlDocument();
-            HtmlDoc.LoadHtml(GetHtml("https://www.sport-express.ru/ajax/translations-block/?dateinterval=yesterday&sportname=football"));
-            YesterdayNode = HtmlDoc.DocumentNode;
+            SetNode("yesterday",ref YesterdayNode);
         }
 
         private string[] ParseYesterday()
