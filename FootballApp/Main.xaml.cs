@@ -19,7 +19,6 @@ namespace FootballApp
     {
         private HtmlNode CentralNode;
         private HtmlNode YesterdayNode;
-        private bool today;
         public Main(string name)
         {
             DataContext = this;
@@ -48,71 +47,28 @@ namespace FootballApp
         {
             List<string> rc = new List<string>();
             SetYesterdayNode();
-            var nodes = YesterdayNode.Descendants("div").Where(d => d.Attributes.Contains("class") && d.Attributes["class"].Value.Contains("heading")).ToArray();
+            var nodes = GetElementsByClassName(YesterdayNode, "div", "heading");
             for (int i = 0; i < nodes.Length; i++) rc.Add(nodes[i].InnerHtml);
             return rc.ToArray();
         }
+
+        private HtmlNode[] GetElementsByClassName(HtmlNode parent, string tagname, string classname)
+            => parent.Descendants(tagname).Where(d => d.Attributes.Contains("class") && d.Attributes["class"].Value.Contains(classname)).ToArray();
 
         private string[] ParseToday()
         {
             List<string> rc = new List<string>();
             SetCentralNode();
-            var nodes = CentralNode.Descendants("div").Where(d =>d.Attributes.Contains("class") && d.Attributes["class"].Value.Contains("heading")).ToArray();
+            var nodes = GetElementsByClassName(CentralNode, "div", "heading");
             for (int i = 0; i < nodes.Length; i++) rc.Add(nodes[i].InnerHtml);
             return rc.ToArray();
         }
 
         private void Today_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            List<Match> rc = new List<Match>();
-            List<string> mat = new List<string>();
             SetCentralNode();
-            today = true;
-            int l = Today.SelectedIndex + 1;
-
-            var nodesleft = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                    "]/div/div/a/div[2]/div");
-            var nodesright = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                    "]/div/div/a/div[4]/div");
-            var leftGoals = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                    "]/div/div/a/div[3]/div/div[1]");
-            var rightGoals = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                     "]/div/div/a/div[3]/div/div[3]");
-            var times = CentralNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l +
-                                                "]/div/div/a/div[1]/div/div[1]");
-
-
-            for (int i = 0; i < nodesleft.Count; i++)
-            {
-                rc.Add(new Match()
-                {
-                    FirstTeam = nodesleft[i].InnerHtml.Trim(),
-                    SecondTeam = nodesright[i].InnerHtml.Trim(),
-                    GoalsFirstTeam = leftGoals[i].InnerHtml.Trim(),
-                    GoalsSecondTeam = rightGoals[i].InnerHtml.Trim(),
-                    TimeOfRunning = times[i].InnerHtml
-                });
-                mat.Add(rc[i].ToString());
-            }
-            Matches.Visibility = Visibility.Visible;
-            Matches.ItemsSource = mat;
+            SetMatches(CentralNode, Today);
         }
-        private int FindMatchIndex() => Matches.SelectedIndex + 2;
-
-        private string GetLink()
-        {
-            string help = "";
-            HtmlNode node = null;
-            if (today)
-                help = CentralNode.SelectSingleNode("//*[@id=\"translation_part_football\"]/div[" + (Today.SelectedIndex + 1) +
-                                             "]/div[" + FindMatchIndex() + "]/div/a").GetAttributeValue("href", null);
-            else
-                help = YesterdayNode.SelectSingleNode("//*[@id=\"translation_part_football\"]/div[" + (Yesterday.SelectedIndex + 1) +
-                                                    "]/div[" + FindMatchIndex() + "]/div/a").GetAttributeValue("href", null);
-            Regex regex = new Regex(@"\d+");
-            return regex.Match(help).Value;
-        }
-
 
         #region Alternative Get Html from URL
         public string GetHtml(String urlAddress)
@@ -220,20 +176,20 @@ namespace FootballApp
             }
             FirstGoals.Content = firstTeamGoals;
             SecondGoals.Content = secondTeamGoals;
-            Goals.Content = node.SelectSingleNode("/match").GetAttributeValue("score", null);
+            Goals.Text = node.SelectSingleNode("/match").GetAttributeValue("score", null);
         }
         #endregion
         private void Matches_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Matches.SelectedItem == null)
             {
-                Squad1.Content = Squad2.Content = Goals.Content = Trainer1.Content =
+                Squad1.Content = Squad2.Content = Trainer1.Content =
                     Trainer2.Content = FirstGoals.Content = SecondGoals.Content = BestSquad.Content =
-                    Status.Content = AnotherPlayers.Content = "";
+                    Status.Content = AnotherPlayers.Content = Goals.Text = "";
                 FirstSquad.ItemsSource = SecondSquad.ItemsSource = AnotherFirstSquad.ItemsSource = AnotherSecondSquad.ItemsSource = null;
                 return;
             }
-            string url = "https://www.sport-express.ru/services/match/football/" + GetLink() + "/online/se/?xml=1";
+            string url = "https://www.sport-express.ru/services/match/football/" + ((Match)Matches.SelectedItem).Link + "/online/se/?xml=1";
             var HtmlDoc = new HtmlDocument();
             HtmlDoc.LoadHtml(GetHtml(url));
             var RootNode = HtmlDoc.DocumentNode;
@@ -246,25 +202,34 @@ namespace FootballApp
 
         private void Yesterday_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            List<string> matches = new List<string>();
-            today = false;
-            int l = Yesterday.SelectedIndex + 1;
-            var FirstTeams = YesterdayNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l + "]/div/div/a/div[2]/div");
-            var SecondTeams = YesterdayNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l + "]/div/div/a/div[4]/div");
-            var FirstGoals = YesterdayNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l + "]/div/div/a/div[3]/div/div[1]");
-            var SecondGoals = YesterdayNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l + "]/div/div/a/div[3]/div/div[3]");
-            var Times = YesterdayNode.SelectNodes("//*[@id=\"translation_part_football\"]/div[" + l + "]/div/div/a/div[1]/div/div[1]");
-            for (int i = 0; i < FirstTeams.Count; i++)
-                matches.Add(new Match()
+            SetYesterdayNode();
+            SetMatches(YesterdayNode, Yesterday);
+        }
+
+        private void SetMatches(HtmlNode node, ListBox list)
+        {
+            List<Match> mat = new List<Match>();
+            Regex regex = new Regex(@"\d+");
+            var AllNodes = GetElementsByClassName(node, "div", "item is_");
+            for (int i = 0; i < AllNodes.Length; i++)
+            {
+                if (AllNodes[i].ParentNode.ParentNode.SelectSingleNode("div[1]").InnerHtml
+                        .Equals((string)list.SelectedItem) ||
+                    AllNodes[i].ParentNode.SelectSingleNode("div[1]").InnerHtml.Equals((string)list.SelectedItem))
                 {
-                    FirstTeam = FirstTeams[i].InnerHtml.Trim(),
-                    GoalsFirstTeam = FirstGoals[i].InnerHtml.Trim(),
-                    GoalsSecondTeam = SecondGoals[i].InnerHtml.Trim(),
-                    SecondTeam = SecondTeams[i].InnerHtml.Trim(),
-                    TimeOfRunning = Times[i].InnerHtml.Trim()
-                }.ToString());
+                    mat.Add(new Match()
+                    {
+                        FirstTeam = AllNodes[i].SelectSingleNode("a/div[2]/div").InnerHtml.Trim(),
+                        SecondTeam = AllNodes[i].SelectSingleNode("a/div[4]/div").InnerHtml.Trim(),
+                        GoalsFirstTeam = AllNodes[i].SelectSingleNode("a/div[3]/div/div[1]").InnerHtml.Trim(),
+                        GoalsSecondTeam = AllNodes[i].SelectSingleNode("a/div[3]/div/div[3]").InnerHtml.Trim(),
+                        TimeOfRunning = AllNodes[i].SelectSingleNode("a/div[1]/div/div[1]").InnerHtml,
+                        Link = regex.Match(AllNodes[i].ChildNodes["a"].GetAttributeValue("href", "")).Value
+                    });
+                }
+            }
             Matches.Visibility = Visibility.Visible;
-            Matches.ItemsSource = matches;
+            Matches.ItemsSource = mat;
         }
     }
 }

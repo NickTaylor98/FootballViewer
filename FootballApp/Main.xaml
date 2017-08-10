@@ -56,9 +56,9 @@
                     <RowDefinition Height="25*" />
                     <RowDefinition Height="42*" />
                 </Grid.RowDefinitions>
-                <Label Name="Goals" FontWeight="Bold" Grid.Row="1" 
-               FontSize="38" 
-               VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <Viewbox Grid.Row="1" Name="Viewbox">
+                    <TextBox Name="Goals" Width="{Binding Viewbox.Width}"/>
+                </Viewbox>
                 <Label Name="Status" FontWeight="Bold" FontFamily="Times New Roman"
                        FontSize="12" 
                        VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>

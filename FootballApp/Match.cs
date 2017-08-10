@@ -7,6 +7,7 @@
         public string GoalsFirstTeam { get; set; }
         public string GoalsSecondTeam { get; set; }
         public string TimeOfRunning { get; set; }
+        public string Link { get; set; }
         public override string ToString() => TimeOfRunning + "     " + FirstTeam + " - " + SecondTeam + " " + GoalsFirstTeam + ":" + GoalsSecondTeam;
     }
 }
