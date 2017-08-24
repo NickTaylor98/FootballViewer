@@ -65,6 +65,8 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <Image Name="ImageFirstTeam" Grid.Column="0"/>
+            <Image Name="ImageSecondTeam" Grid.Column="2"/>
             <Label Name="FirstGoals" Grid.Column="0" FontWeight="Bold"  
                    FontSize="12" 
                    HorizontalContentAlignment="Left"/>

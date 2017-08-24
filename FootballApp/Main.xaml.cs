@@ -5,8 +5,11 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using HtmlAgilityPack;
 
 namespace FootballApp
@@ -207,6 +210,7 @@ namespace FootballApp
                     help += Goal.GetAttributeValue("fullMinute", "");
                     help += " " + Goal.ChildNodes["player"].GetAttributeValue("shortname", "");
                     if (Goal.GetAttributeValue("kind", "").Equals("penalty")) help += "(п)";
+                    else if (Goal.GetAttributeValue("kind", "").Equals("itself")) help += "(а)";
                     if (Goal.ChildNodes["info"].GetAttributeValue("scoredFor", "").Equals("home"))
                         firstTeamGoals += help + "\n";
                     else secondTeamGoals += help + "\n";
@@ -217,6 +221,14 @@ namespace FootballApp
             Goals.Text = node.SelectSingleNode("/match").GetAttributeValue("score", null);
         }
 
+        private void SetImages(HtmlNode node)
+        {
+            var homeImage = node.SelectSingleNode("/match/homecommand").GetAttributeValue("icon80x80", "");
+            var guestImage = node.SelectSingleNode("/match/guestcommand").GetAttributeValue("icon80x80", "");
+            ImageFirstTeam.Source= new BitmapImage(new Uri(homeImage));
+            ImageSecondTeam.Source = new BitmapImage(new Uri(guestImage));
+        }
+
         private void SetInformation(HtmlNode RootNode)
         {
             SetStatus(RootNode);
@@ -224,6 +236,7 @@ namespace FootballApp
             SetTrainersOfCommands(RootNode);
             SetGoalsOfCommands(RootNode);
             SetSquadsOfCommands(RootNode);
+            SetImages(RootNode);
         }
         #endregion
         private void Matches_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -233,7 +246,9 @@ namespace FootballApp
                 Squad1.Content = Squad2.Content = Trainer1.Content =
                     Trainer2.Content = FirstGoals.Content = SecondGoals.Content = BestSquad.Content =
                     Status.Content = AnotherPlayers.Content = Goals.Text = "";
-                FirstSquad.ItemsSource = SecondSquad.ItemsSource = AnotherFirstSquad.ItemsSource = AnotherSecondSquad.ItemsSource = null;
+                FirstSquad.ItemsSource = SecondSquad.ItemsSource = AnotherFirstSquad.ItemsSource =
+                    AnotherSecondSquad.ItemsSource = null;
+                ImageFirstTeam.Source = ImageSecondTeam.Source = null;
                 return;
             }
             string url = "https://www.sport-express.ru/services/match/football/" + ((Match)Matches.SelectedItem).Link + "/online/se/?xml=1";
